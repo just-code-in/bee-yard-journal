@@ -87,7 +87,7 @@ const NewEntryModal: React.FC<NewEntryModalProps> = ({ isOpen, onClose, onSave, 
                 </span>
               </label>
               <textarea
-                className="w-full h-48 p-4 bg-white border border-stone-300 rounded-lg shadow-inner focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono text-stone-800"
+                className="w-full h-48 p-4 bg-white border border-stone-300 rounded-lg shadow-inner focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono text-stone-800 placeholder:text-stone-400"
                 placeholder="e.g., 'Wind is picking up, 55 degrees. Founder colony looks strong but small cluster. Saw the queen. Added pollen patty...'"
                 value={rawNotes}
                 onChange={(e) => setRawNotes(e.target.value)}
@@ -110,7 +110,7 @@ const NewEntryModal: React.FC<NewEntryModalProps> = ({ isOpen, onClose, onSave, 
                 <textarea 
                   value={previewData.narrative} 
                   onChange={(e) => setPreviewData({...previewData, narrative: e.target.value})}
-                  className="w-full bg-transparent border-0 p-0 text-stone-800 leading-relaxed font-serif focus:ring-0"
+                  className="w-full bg-transparent border-0 p-0 text-stone-800 leading-relaxed font-serif focus:ring-0 resize-none"
                   rows={6}
                 />
               </div>
@@ -123,15 +123,15 @@ const NewEntryModal: React.FC<NewEntryModalProps> = ({ isOpen, onClose, onSave, 
                       type="number"
                       value={previewData.weather?.temperature}
                       onChange={(e) => setPreviewData({...previewData, weather: {...previewData.weather!, temperature: parseInt(e.target.value)}})}
-                      className="w-16 p-1 border rounded"
+                      className="w-16 p-2 border border-stone-300 rounded bg-white text-stone-800 font-mono focus:ring-1 focus:ring-amber-500 outline-none"
                     />
-                    <span className="self-center">°F</span>
+                    <span className="self-center text-stone-600 font-serif">°F</span>
                   </div>
                   <input 
                     type="text" 
                     value={previewData.weather?.condition}
                     onChange={(e) => setPreviewData({...previewData, weather: {...previewData.weather!, condition: e.target.value}})}
-                    className="w-full mt-2 p-1 border rounded text-sm" 
+                    className="w-full mt-2 p-2 border border-stone-300 rounded text-sm bg-white text-stone-800 focus:ring-1 focus:ring-amber-500 outline-none" 
                   />
                 </div>
                 <div className="bg-white p-4 rounded-lg border border-stone-200 shadow-sm">
@@ -139,7 +139,7 @@ const NewEntryModal: React.FC<NewEntryModalProps> = ({ isOpen, onClose, onSave, 
                   <textarea 
                     value={previewData.phenology}
                     onChange={(e) => setPreviewData({...previewData, phenology: e.target.value})}
-                    className="w-full text-stone-900 italic text-sm p-1 border rounded h-20"
+                    className="w-full text-stone-800 italic text-sm p-2 border border-stone-300 rounded h-20 bg-white focus:ring-1 focus:ring-amber-500 outline-none resize-none"
                   />
                 </div>
               </div>
@@ -152,7 +152,7 @@ const NewEntryModal: React.FC<NewEntryModalProps> = ({ isOpen, onClose, onSave, 
                     <select 
                        value={previewData.technicalNotes?.queenStatus}
                        onChange={(e) => setPreviewData({...previewData, technicalNotes: {...previewData.technicalNotes!, queenStatus: e.target.value as any}})}
-                       className="block w-full mt-1 p-2 rounded"
+                       className="block w-full mt-1 p-2 rounded bg-white border border-stone-300 text-stone-800 focus:ring-1 focus:ring-amber-500 outline-none"
                     >
                       <option>Queenright</option>
                       <option>Queenless</option>
@@ -166,7 +166,7 @@ const NewEntryModal: React.FC<NewEntryModalProps> = ({ isOpen, onClose, onSave, 
                       type="text" 
                       value={previewData.technicalNotes?.clusterSize}
                       onChange={(e) => setPreviewData({...previewData, technicalNotes: {...previewData.technicalNotes!, clusterSize: e.target.value}})}
-                      className="block w-full mt-1 p-2 rounded"
+                      className="block w-full mt-1 p-2 rounded bg-white border border-stone-300 text-stone-800 focus:ring-1 focus:ring-amber-500 outline-none"
                     />
                   </label>
                 </div>
@@ -175,7 +175,7 @@ const NewEntryModal: React.FC<NewEntryModalProps> = ({ isOpen, onClose, onSave, 
                   <textarea 
                     value={previewData.technicalNotes?.interventions?.join(', ')}
                     onChange={(e) => setPreviewData({...previewData, technicalNotes: {...previewData.technicalNotes!, interventions: e.target.value.split(',').map(s=>s.trim())}})}
-                    className="block w-full mt-1 p-2 rounded"
+                    className="block w-full mt-1 p-2 rounded bg-white border border-stone-300 text-stone-800 focus:ring-1 focus:ring-amber-500 outline-none"
                     rows={2}
                   />
                 </label>
@@ -184,13 +184,13 @@ const NewEntryModal: React.FC<NewEntryModalProps> = ({ isOpen, onClose, onSave, 
               <div className="flex space-x-3 pt-4 border-t border-stone-200">
                 <button 
                   onClick={() => setPreviewData(null)}
-                  className="flex-1 py-3 border border-stone-300 rounded-lg text-stone-600 font-bold hover:bg-stone-50"
+                  className="flex-1 py-3 border border-stone-300 rounded-lg text-stone-600 font-bold hover:bg-stone-50 bg-white transition-colors"
                 >
                   Reprocess Notes
                 </button>
                 <button 
                   onClick={handleSave}
-                  className="flex-1 py-3 bg-amber-600 rounded-lg text-white font-bold hover:bg-amber-700 flex justify-center items-center space-x-2"
+                  className="flex-1 py-3 bg-amber-600 rounded-lg text-white font-bold hover:bg-amber-700 flex justify-center items-center space-x-2 transition-colors"
                 >
                   <Save className="w-5 h-5" />
                   <span>{initialData ? 'Update Log' : 'Commit to Log'}</span>

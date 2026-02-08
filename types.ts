@@ -1,3 +1,4 @@
+
 export interface WeatherSnapshot {
   temperature: number;
   condition: string;
@@ -36,13 +37,22 @@ export interface ColonyProfile {
   notes: string;
 }
 
+export interface InventoryLog {
+  id: string;
+  date: string;
+  action: 'Created' | 'Updated' | 'Flagged' | 'Restocked';
+  actor: string;
+  note: string;
+}
+
 export interface InventoryItem {
   id: string;
   name: string;
   category: 'Hive Body' | 'Frame' | 'Feed' | 'Treatment' | 'Tool';
   quantity: number;
   status: 'Good' | 'Fair' | 'Flagged for Removal';
-  notes?: string;
+  notes?: string; // Current general note
+  history: InventoryLog[]; // Audit trail
 }
 
 export interface CrewMember {
@@ -50,6 +60,7 @@ export interface CrewMember {
   role: string;
   initials: string;
   email?: string;
+  phone?: string;
 }
 
 export interface Flora {
@@ -61,6 +72,23 @@ export interface Flora {
   peakMonths: number[]; // 0-11
   color: string; // Tailwind class
   sketchUrl?: string; // URL for the AI generated sketch
+}
+
+export interface ArchiveDocument {
+  id: string;
+  name: string;
+  type: 'PDF' | 'IMG' | 'DOC';
+  category: 'Fiscal' | 'Protocol' | 'Reference';
+  dateAdded: string;
+  size: string;
+}
+
+export interface BudgetItem {
+  id: string;
+  description: string;
+  amount: number;
+  date: string;
+  category: 'Consumable' | 'Feed' | 'Treatment' | 'Equipment';
 }
 
 export type PageView = 'journal' | 'colonies' | 'shed' | 'crew' | 'archive';

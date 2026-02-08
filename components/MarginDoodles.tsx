@@ -30,9 +30,9 @@ const MarginDoodles: React.FC = () => {
     if (initialized.current) return;
     initialized.current = true;
 
-    // Select 4 random doodles to display
+    // Select only 2 random doodles to display to conserve API quota
     const shuffled = [...DOODLE_PROMPTS].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 4).map((item, index) => ({
+    const selected = shuffled.slice(0, 2).map((item, index) => ({
       ...item,
       id: index,
       rotation: Math.random() * 8 - 4, // Random tilt
@@ -40,15 +40,15 @@ const MarginDoodles: React.FC = () => {
     }));
     setDoodles(selected);
 
-    // Auto-generate images one by one to avoid hitting rate limits too hard
+    // Auto-generate images one by one with significant delay
     const loadImages = async () => {
       // Small initial delay so page renders first
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 1000));
       
       for (const item of selected) {
         try {
-          // Add a delay between requests
-          await new Promise(r => setTimeout(r, 1200));
+          // Add a 5-second delay between requests to avoid 429 errors
+          await new Promise(r => setTimeout(r, 5000));
           const url = await generateBotanicalSketch(item.prompt);
           if (url) {
             setDoodles(prev => prev.map(d => d.id === item.id ? { ...d, url, isLoading: false } : d));

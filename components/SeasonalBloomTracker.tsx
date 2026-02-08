@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Flora } from '../types';
 import { Sprout, Droplets, Sun, Wand2, Loader2, Calendar } from 'lucide-react';
 import { generateBotanicalSketch } from '../services/geminiService';
@@ -61,50 +61,51 @@ const INITIAL_FLORA: Flora[] = [
 ];
 
 const MONTHS = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+const CACHE_KEY = 'pomeroy_botanical_sketches_v1';
 
 const SeasonalBloomTracker: React.FC = () => {
-  const [flora, setFlora] = useState<Flora[]>(INITIAL_FLORA);
+  // Initialize state by checking localStorage first
+  const [flora, setFlora] = useState<Flora[]>(() => {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const urlMap = JSON.parse(cached);
+        return INITIAL_FLORA.map(plant => ({
+          ...plant,
+          sketchUrl: urlMap[plant.id] || undefined
+        }));
+      }
+    } catch (e) {
+      console.error("Failed to load cached sketches:", e);
+    }
+    return INITIAL_FLORA;
+  });
+
   const [generatingId, setGeneratingId] = useState<string | null>(null);
-  const initialized = useRef(false);
   
   const currentMonthIndex = new Date().getMonth();
   const activeFlora = flora.filter(f => f.bloomMonths.includes(currentMonthIndex));
-
-  // Auto-generate sketches for active flora on load
-  useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
-    const loadImages = async () => {
-      // Filter for active plants that don't have sketches yet
-      const plantsToLoad = INITIAL_FLORA.filter(f => 
-        f.bloomMonths.includes(currentMonthIndex) && !f.sketchUrl
-      );
-      
-      for (const plant of plantsToLoad) {
-        setGeneratingId(plant.id);
-        try {
-          // Stagger requests to avoid rate limiting
-          await new Promise(resolve => setTimeout(resolve, 800)); 
-          const sketch = await generateBotanicalSketch(plant.commonName);
-          if (sketch) {
-            setFlora(prev => prev.map(p => p.id === plant.id ? { ...p, sketchUrl: sketch } : p));
-          }
-        } catch (e) {
-          console.error("Failed to auto-sketch:", plant.commonName);
-        }
-        setGeneratingId(null);
-      }
-    };
-    
-    loadImages();
-  }, [currentMonthIndex]);
 
   const handleGenerateSketch = async (plant: Flora) => {
     setGeneratingId(plant.id);
     const sketch = await generateBotanicalSketch(plant.commonName);
     if (sketch) {
-      setFlora(prev => prev.map(p => p.id === plant.id ? { ...p, sketchUrl: sketch } : p));
+      setFlora(prev => {
+        const updated = prev.map(p => p.id === plant.id ? { ...p, sketchUrl: sketch } : p);
+        
+        // Persist to localStorage
+        try {
+          const cacheMap = updated.reduce((acc, item) => {
+            if (item.sketchUrl) acc[item.id] = item.sketchUrl;
+            return acc;
+          }, {} as Record<string, string>);
+          localStorage.setItem(CACHE_KEY, JSON.stringify(cacheMap));
+        } catch (e) {
+          console.warn("Quota exceeded or storage error:", e);
+        }
+        
+        return updated;
+      });
     }
     setGeneratingId(null);
   };
@@ -132,7 +133,7 @@ const SeasonalBloomTracker: React.FC = () => {
                 {plant.sketchUrl ? (
                   <img src={plant.sketchUrl} alt={plant.commonName} className="w-full h-full object-cover filter sepia contrast-125 mix-blend-multiply" />
                 ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-stone-400 gap-1 bg-stone-50">
+                  <div className="w-full h-full flex flex-col items-center justify-center text-stone-400 gap-1 bg-stone-50 hover:bg-stone-100 transition-colors cursor-pointer" onClick={() => handleGenerateSketch(plant)}>
                     {generatingId === plant.id ? (
                       <Loader2 className="w-6 h-6 animate-spin text-amber-600" />
                     ) : (
@@ -142,10 +143,9 @@ const SeasonalBloomTracker: React.FC = () => {
                       </>
                     )}
                     <button 
-                      onClick={() => handleGenerateSketch(plant)}
-                      disabled={generatingId === plant.id}
                       className="absolute inset-0 z-10 bg-transparent"
-                      title="Generate Botanical Sketch with AI"
+                      disabled={generatingId === plant.id}
+                      title="Click to generate Botanical Sketch"
                     />
                   </div>
                 )}

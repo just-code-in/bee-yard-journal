@@ -12,7 +12,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, setPage, onNewEntr
   const navItems: { id: PageView; label: string; icon: React.ReactNode }[] = [
     { id: 'journal', label: 'Field Journal', icon: <BookOpen className="w-6 h-6" /> },
     { id: 'colonies', label: 'The Colonies', icon: <Hexagon className="w-6 h-6" /> },
-    { id: 'shed', label: 'The Yard Shed', icon: <Warehouse className="w-6 h-6" /> },
+    { id: 'shed', label: 'The Yard Kit', icon: <Warehouse className="w-6 h-6" /> },
     { id: 'crew', label: 'The Bee Crew', icon: <Users className="w-6 h-6" /> },
     { id: 'archive', label: 'Archive', icon: <Archive className="w-6 h-6" /> },
   ];
