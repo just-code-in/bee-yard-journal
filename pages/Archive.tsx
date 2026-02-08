@@ -160,27 +160,27 @@ const Archive: React.FC<ArchiveProps> = ({
           </button>
         </div>
 
-        <div className="bg-white border border-stone-200 rounded-lg shadow-sm overflow-hidden">
-          <table className="w-full text-left">
+        <div className="bg-white border border-stone-200 rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+          <table className="w-full text-left min-w-[600px] md:min-w-0">
             <thead className="bg-stone-50 text-xs uppercase text-stone-500 font-bold border-b border-stone-200">
               <tr>
-                <th className="p-4 w-12">Type</th>
-                <th className="p-4">Document Name</th>
-                <th className="p-4">Category</th>
-                <th className="p-4 hidden sm:table-cell">Date Added</th>
-                <th className="p-4 text-right">Action</th>
+                <th className="p-3 w-10">Type</th>
+                <th className="p-3">Document Name</th>
+                <th className="p-3">Category</th>
+                <th className="p-3 hidden sm:table-cell">Date Added</th>
+                <th className="p-3 text-right">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
               {documents.map(doc => (
                 <tr key={doc.id} className="hover:bg-amber-50/30 transition-colors group">
-                  <td className="p-4">{getIcon(doc.type)}</td>
-                  <td className="p-4">
-                    <span className="block font-medium text-stone-800">{doc.name}</span>
+                  <td className="p-3">{getIcon(doc.type)}</td>
+                  <td className="p-3">
+                    <span className="block font-medium text-stone-800 text-sm md:text-base">{doc.name}</span>
                     <span className="block sm:hidden text-xs text-stone-400">{doc.dateAdded}</span>
                   </td>
-                  <td className="p-4">
-                    <span className={`inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded border ${
+                  <td className="p-3">
+                    <span className={`inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border whitespace-nowrap ${
                       doc.category === 'Fiscal' ? 'bg-green-50 text-green-700 border-green-100' :
                       doc.category === 'Protocol' ? 'bg-red-50 text-red-700 border-red-100' :
                       'bg-stone-100 text-stone-600 border-stone-200'
@@ -188,9 +188,9 @@ const Archive: React.FC<ArchiveProps> = ({
                       {doc.category}
                     </span>
                   </td>
-                  <td className="p-4 text-sm text-stone-500 hidden sm:table-cell font-mono">{doc.dateAdded}</td>
-                  <td className="p-4 text-right">
-                    <div className="flex justify-end gap-2">
+                  <td className="p-3 text-sm text-stone-500 hidden sm:table-cell font-mono whitespace-nowrap">{doc.dateAdded}</td>
+                  <td className="p-3 text-right whitespace-nowrap">
+                    <div className="flex justify-end gap-1">
                         <button className="p-2 text-stone-400 hover:text-amber-600 transition-colors" title="Download">
                           <Download className="w-4 h-4" />
                         </button>
